@@ -1,10 +1,10 @@
-# pop-os-postinstall
-Script de post install do Pop!_OS
+# Linux-mint-postinstall
+Script de post install do Linux Mint
 
 
 ## Como usar
 
 Apenas execute o comando abaixo no terminal
 ```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/Diolinux/pop-os-postinstall/main/pop-os-postinstall.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/Grabiie/Linux-mint-postinstall/main/pop-os-postinstall.sh)"
 ```
