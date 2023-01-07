@@ -6,5 +6,5 @@ Script de post install do Linux Mint
 
 Apenas execute o comando abaixo no terminal
 ```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/Grabiie/Linux-mint-postinstall/main/pop-os-postinstall.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/Grabiie/Linux-mint-postinstall/main/linux-mint-postinstall.sh)"
 ```
