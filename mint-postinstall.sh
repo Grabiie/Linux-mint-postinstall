@@ -1,24 +1,22 @@
 #!/usr/bin/env bash
 #
-# pos-os-postinstall.sh - Instalar e configura programas no Pop!_OS (20.04 LTS ou superior)
+# mint-postinstall.sh - Instalar e configura programas no Linux Mint (21.1 ou superior, versões anteriores testar)
 #
 # Website:       https://diolinux.com.br
-# Autor:         Dionatan Simioni
+# Autor:         Dionatan Simioni e Grabiie
 #
 # ------------------------------------------------------------------------ #
 #
 # COMO USAR?
-#   $ ./pos-os-postinstall.sh
+#   $ ./mint-postinstall.sh
 #
 # ----------------------------- VARIÁVEIS ----------------------------- #
 set -e
 
 ##URLS
 
-URL_GOOGLE_CHROME="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
-URL_4K_VIDEO_DOWNLOADER="https://dl.4kdownload.com/app/4kvideodownloader_4.20.0-1_amd64.deb?source=website"
-URL_INSYNC="https://d2t3ff60b2tol4.cloudfront.net/builds/insync_3.7.2.50318-impish_amd64.deb"
-URL_SYNOLOGY_DRIVE="https://global.download.synology.com/download/Utility/SynologyDriveClient/3.0.3-12689/Ubuntu/Installer/x86_64/synology-drive-client-12689.x86_64.deb"
+URL_ANYDESK="https://download.anydesk.com/linux/anydesk_6.2.1-1_amd64.deb"
+URL_DEEMIX="https://download.deemix.app/gui/linux-x64-latest.deb"
 
 
 ##DIRETÓRIOS E ARQUIVOS
@@ -64,6 +62,11 @@ travas_apt(){
   sudo rm /var/cache/apt/archives/lock
 }
 
+## Removendo Firefox pre-instalado para depois instalar em flatpak ##
+remove_fox(){
+sudo apt remove firefox -y
+}
+
 ## Adicionando/Confirmando arquitetura de 32 bits ##
 add_archi386(){
 sudo dpkg --add-architecture i386
@@ -76,23 +79,11 @@ sudo apt update -y
 ##DEB SOFTWARES TO INSTALL
 
 PROGRAMAS_PARA_INSTALAR=(
-  snapd
-  winff
+  nala
   virtualbox
-  ratbagd
-  gparted
-  timeshift
-  gufw
-  synaptic
-  solaar
-  vlc
   code
-  gnome-sushi 
-  folder-color
   git
   wget
-  ubuntu-restricted-extras
-  v4l2loopback-utils
  
 )
 
@@ -105,10 +96,8 @@ install_debs(){
 echo -e "${VERDE}[INFO] - Baixando pacotes .deb${SEM_COR}"
 
 mkdir "$DIRETORIO_DOWNLOADS"
-wget -c "$URL_GOOGLE_CHROME"       -P "$DIRETORIO_DOWNLOADS"
-wget -c "$URL_4K_VIDEO_DOWNLOADER" -P "$DIRETORIO_DOWNLOADS"
-wget -c "$URL_INSYNC"              -P "$DIRETORIO_DOWNLOADS"
-wget -c "$URL_SYNOLOGY_DRIVE"      -P "$DIRETORIO_DOWNLOADS"
+wget -c "$URL_ANYDESK" -P "$DIRETORIO_DOWNLOADS"
+wget -c "$URL_DEEMIX" -P "$DIRETORIO_DOWNLOADS"
 
 ## Instalando pacotes .deb baixados na sessão anterior ##
 echo -e "${VERDE}[INFO] - Instalando pacotes .deb baixados${SEM_COR}"
@@ -131,30 +120,13 @@ install_flatpaks(){
 
   echo -e "${VERDE}[INFO] - Instalando pacotes flatpak${SEM_COR}"
 
-flatpak install flathub com.obsproject.Studio -y
-flatpak install flathub org.gimp.GIMP -y
 flatpak install flathub com.spotify.Client -y
 flatpak install flathub com.bitwarden.desktop -y
 flatpak install flathub org.telegram.desktop -y
-flatpak install flathub org.freedesktop.Piper -y
-flatpak install flathub org.chromium.Chromium -y
-flatpak install flathub org.gnome.Boxes -y
-flatpak install flathub org.onlyoffice.desktopeditors -y
-flatpak install flathub org.qbittorrent.qBittorrent -y
-flatpak install flathub org.flameshot.Flameshot -y
-flatpak install flathub org.electrum.electrum -y
+flatpak install flathub org.mozilla.firefox -y
+flatpak install flathub com.uploadedlobster.peek -y
+flatpak install flathub com.github.unrud.VideoDownloader -y
 }
-
-## Instalando pacotes Snap ##
-
-install_snaps(){
-
-echo -e "${VERDE}[INFO] - Instalando pacotes snap${SEM_COR}"
-
-sudo snap install authy
-
-}
-
 
 # -------------------------------------------------------------------------- #
 # ----------------------------- PÓS-INSTALAÇÃO ----------------------------- #
@@ -168,52 +140,20 @@ apt_update -y
 flatpak update -y
 sudo apt autoclean -y
 sudo apt autoremove -y
-nautilus -q
-}
-
-
-# -------------------------------------------------------------------------- #
-# ----------------------------- CONFIGS EXTRAS ----------------------------- #
-
-#Cria pastas para produtividade no nautilus
-extra_config(){
-
-
-mkdir /home/$USER/TEMP
-mkdir /home/$USER/EDITAR 
-mkdir /home/$USER/Resolve
-mkdir /home/$USER/AppImage
-mkdir /home/$USER/Vídeos/'OBS Rec'
-
-#Adiciona atalhos ao Nautilus
-
-if test -f "$FILE"; then
-    echo "$FILE já existe"
-else
-    echo "$FILE não existe, criando..."
-    touch /home/$USER/.config/gkt-3.0/bookmarks
-fi
-
-echo "file:///home/$USER/EDITAR 🔵 EDITAR" >> $FILE
-echo "file:///home/$USER/AppImage" >> $FILE
-echo "file:///home/$USER/Resolve 🔴 Resolve" >> $FILE
-echo "file:///home/$USER/TEMP 🕖 TEMP" >> $FILE
 }
 
 # -------------------------------------------------------------------------------- #
 # -------------------------------EXECUÇÃO----------------------------------------- #
 
-travas_apt
 testes_internet
 travas_apt
 apt_update
 travas_apt
+remove_fox
 add_archi386
 just_apt_update
 install_debs
 install_flatpaks
-install_snaps
-extra_config
 apt_update
 system_clean
 
