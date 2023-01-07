@@ -17,7 +17,7 @@ set -e
 
 URL_ANYDESK="https://download.anydesk.com/linux/anydesk_6.2.1-1_amd64.deb"
 URL_DEEMIX="https://download.deemix.app/gui/linux-x64-latest.deb"
-
+URL_ZRAMD="https://github.com/maximumadmin/zramd/releases/download/v0.9.2/zramd_amd64.deb"
 
 ##DIRETÓRIOS E ARQUIVOS
 
@@ -71,6 +71,7 @@ sudo apt remove firefox -y
 add_archi386(){
 sudo dpkg --add-architecture i386
 }
+
 ## Atualizando o repositório ##
 just_apt_update(){
 sudo apt update -y
@@ -98,6 +99,7 @@ echo -e "${VERDE}[INFO] - Baixando pacotes .deb${SEM_COR}"
 mkdir "$DIRETORIO_DOWNLOADS"
 wget -c "$URL_ANYDESK" -P "$DIRETORIO_DOWNLOADS"
 wget -c "$URL_DEEMIX" -P "$DIRETORIO_DOWNLOADS"
+wget -c "$URL_ZRAMD" -P "$DIRETORIO_DOWNLOADS"
 
 ## Instalando pacotes .deb baixados na sessão anterior ##
 echo -e "${VERDE}[INFO] - Instalando pacotes .deb baixados${SEM_COR}"
